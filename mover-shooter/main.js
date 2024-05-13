@@ -30,7 +30,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(800, 800);
+  createCanvas(600, 600);
 }
 
 // ________________________DRAW LOOP________________________
@@ -74,9 +74,6 @@ function draw() {
   // Display kill count
   fill(0);
   text("Kill Count: " + killCount, 10, 10);
-  if (killCount > 0 && killCount % 10 === 0) {
-    zombieFrequency -= 10;
-  }
   count++;
 }
 
@@ -102,7 +99,7 @@ function drawBullet() {
     } else if (bulletArray[i].direction === "right") {
       bulletArray[i].x += bulletArray[i].xSpeed;
     }
-
+    
     fill(255, 0, 0);
     circle(bulletArray[i].x, bulletArray[i].y, bulletSize);
     if (bulletArray[i].x > width || bulletArray[i].x < 0 || bulletArray[i].y > height || bulletArray[i].y < 0) {
@@ -128,7 +125,7 @@ function drawZombies() {
   for (let i = 0; i < zombieArray.length; i++) {
     fill(0, 255, 0);
     circle(zombieArray[i].x, zombieArray[i].y, zombieArray[i].size);
-
+    
     // Zombie movement
     if (playerX < zombieArray[i].x) {
       zombieArray[i].x -= zombieSpeed;
@@ -140,7 +137,7 @@ function drawZombies() {
     } else if (playerY > zombieArray[i].y) {
       zombieArray[i].y += zombieSpeed;
     }
-
+    
     // Zombie bullet collision
     for (let j = 0; j < bulletArray.length; j++) {
       if (
@@ -149,15 +146,18 @@ function drawZombies() {
       ) {
         removeArray.push(i);
         bulletArray.splice(j, 1);
+        if (killCount > 0 && killCount % 10 === 0) {
+          zombieFrequency -= 10;
+        }
       }
     }
-
+    
     // Zombie to zombie collision
     for (let j = 0; j < zombieArray.length; j++) {
       if (
         i !== j &&
         dist(zombieArray[i].x, zombieArray[i].y, zombieArray[j].x, zombieArray[j].y) <
-          zombieArray[i].size / 2 + zombieArray[j].size / 2
+        zombieArray[i].size / 2 + zombieArray[j].size / 2
       ) {
         if (zombieArray[i].x < zombieArray[j].x) {
           zombieArray[i].x -= zombieSpeed;
@@ -176,7 +176,7 @@ function drawZombies() {
       }
     }
   }
-
+  
   // Remove dead zombies
   for (let i = 0; i < removeArray.length; i++) {
     zombieArray.splice(removeArray[i], 1);
