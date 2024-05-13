@@ -31,7 +31,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(800, 800);
+  createCanvas(600, 600);
 }
 
 // ________________________DRAW LOOP________________________
@@ -161,6 +161,9 @@ function drawZombies() {
       ) {
         removeArray.push(i);
         bulletArray.splice(j, 1);
+        if (killCount > 0 && killCount % 10 === 0) {
+          zombieFrequency -= 10;
+        }
       }
     }
 
