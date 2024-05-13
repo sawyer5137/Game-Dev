@@ -18,8 +18,9 @@ let zombieSpeed = 2;
 let count = 0;
 let killCount = 0;
 
-//Sounds
+let health = 100;
 
+//________________________SOUNDS________________________
 function preload() {
   soundFormats("mp3", "ogg");
   zombie1 = loadSound("assets/zombie1.mp3");
@@ -68,15 +69,18 @@ function draw() {
     console.log("Count", count, "Frequency", zombieFrequency);
   }
 
+  // Display health
+  fill(255, 30, 30);
+  rect(width - 210, 10, health * 2, 20);
+  fill(255);
+  text("Health: " + health, width - 200, 25);
+
   // Check for player death
   checkDeath();
 
   // Display kill count
   fill(0);
-  text("Kill Count: " + killCount, 10, 10);
-  if (killCount > 0 && killCount % 10 === 0) {
-    zombieFrequency -= 10;
-  }
+  text("Kill Count: " + killCount, 10, 20);
   count++;
 }
 
@@ -114,10 +118,18 @@ function drawBullet() {
 // ________________________ZOMBIE MECHANICS________________________
 //Zombie generation
 function generateZombie() {
+  let spawnX = Math.floor(Math.random() * width);
+  let spawnY = Math.floor(Math.random() * height);
+
+  if (dist(playerX, playerY, spawnX, spawnY) < 200) {
+    spawnX *= -1;
+    spawnY *= -1;
+  }
+
   zombieArray.push({
     size: Math.floor(Math.random() * (zombieMaxSize - zombieMinSize + 1)) + zombieMinSize,
-    x: Math.floor(Math.random() * width),
-    y: Math.floor(Math.random() * height),
+    x: spawnX,
+    y: spawnY,
   });
   zombieSpawn.play();
 }
@@ -198,6 +210,10 @@ function drawZombies() {
     } else if (randomZombieSound === 2) {
       zombie3.play();
       previousZombieSound = 2;
+    }
+    //Increases zombie spawn frequency
+    if (killCount > 0 && killCount % 10 === 0 && zombieFrequency > 10) {
+      zombieFrequency -= 10;
     }
   }
 }
