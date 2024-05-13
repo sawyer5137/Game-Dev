@@ -1,9 +1,15 @@
-const circleDiameter = 50;
-const frictionCoefficient = 0.993;
-
 // Initial position of the circle
 let circleX = 600;
 let circleY = 400;
+
+// Canvas size
+const canvasWidth = 1500;
+const canvasHeight = 700;
+
+
+const circleDiameter = 35;
+const frictionCoefficient = 0.993;
+let tailLength = 10;
 
 let xVelocity = 0;
 let yVelocity = 0;
@@ -13,17 +19,16 @@ let tempY = 0;
 let count = 0;
 
 let tailPositions = [];
-let tailLength = 10;
 
 function setup() {
-  createCanvas(1200, 800);
+  createCanvas(canvasWidth, canvasHeight);
   textSize(10);
 }
 
 function draw() {
   background(220);
   drawTail();
-
+  
   fill(0, 255, 55);
   circle(circleX, circleY, circleDiameter);
 
@@ -34,12 +39,8 @@ function draw() {
   text(`X Velocity: ${truncateDecimal(xVelocity)}`, 10, 15);
   text(`Y Velocity: ${truncateDecimal(yVelocity)}`, 10, 30);
 
-  if (Math.abs(xVelocity) < 0.02) {
-    xVelocity = 0;
-  }
-  if (Math.abs(yVelocity) < 0.02) {
-    yVelocity = 0;
-  }
+  text(`X Position: ${truncateDecimal(circleX)}`, 10, 45);
+  text(`Y Position: ${truncateDecimal(circleY)}`, 10, 60);
 
   applyFriction();
   enforceBoundary();
@@ -52,7 +53,7 @@ function drawTail() {
     tailPositions.shift();
   }
 
-  for (let i = 0; i < tailPositions.length - 2; i++) {
+  for (let i = 0; i < tailPositions.length; i++) {
     let [x, y] = tailPositions[i];
     noStroke();
     fill(50, 50, 50, 50);
@@ -62,6 +63,11 @@ function drawTail() {
     circle(x, y, circleDiameter * i * 0.1);
     stroke(100, 100);
   }
+}
+
+function mousePressed() {
+  xVelocity = (mouseX - circleX) / 10;
+  yVelocity = (mouseY - circleY) / 10;
 }
 
 function keyPressed() {
@@ -129,7 +135,3 @@ function truncateDecimal(num) {
   return Math.floor(num * 100) / 100;
 }
 
-function mousePressed() {
-  xVelocity = (mouseX - circleX) / 10;
-  yVelocity = (mouseY - circleY) / 10;
-}
